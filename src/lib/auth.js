@@ -26,7 +26,7 @@ function useProvideAuth() {
     signInWithPopup(auth, new GithubAuthProvider)
       .then(result => {
         const credential = GithubAuthProvider.credentialFromResult(result)
-        const token = credential.accessToken
+        const tk = credential.accessToken
         setUser(result.user)
       })
   };
