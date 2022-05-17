@@ -1,8 +1,6 @@
-import { GithubAuthProvider, getAuth, signInWithPopup } from 'firebase/auth';
+import { GithubAuthProvider, getAuth, signInWithPopup, signOut } from 'firebase/auth';
 import { useState, useEffect, useContext, createContext } from 'react';
 import { firebase } from './firebase';
-
-console.info('f2', firebase)
 
 const authContext = createContext();
 
@@ -31,13 +29,10 @@ function useProvideAuth() {
       })
   };
 
-  const signOut = () => {
-    return firebase
-      .auth()
-      .signOut()
-      .then(() => {
-        setUser(false);
-      });
+  const logOut = () => {
+    signOut(auth)
+      .then(() => setUser(false))
+      .catch(err => console.info(err))
   };
 
   // useEffect(() => {
@@ -54,6 +49,6 @@ function useProvideAuth() {
   return {
     user,
     signInWithGithub,
-    signOut
+    logOut
   };
 }
