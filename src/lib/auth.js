@@ -1,6 +1,8 @@
-import { GithubAuthProvider } from 'firebase/auth';
+import { GithubAuthProvider, getAuth, signInWithPopup } from 'firebase/auth';
 import { useState, useEffect, useContext, createContext } from 'react';
-import firebase from './firebase';
+import { firebase } from './firebase';
+
+console.info('f2', firebase)
 
 const authContext = createContext();
 
@@ -16,14 +18,17 @@ export const useAuth = () => {
 function useProvideAuth() {
   const [user, setUser] = useState(null);
 
+  console.log('user - useProvideAuth', user)
+
+  const auth = getAuth()
+
   const signInWithGithub = () => {
-    return firebase
-      .auth()
-      .signInWithPopup(new firebase(), auth, GithubAuthProvider())
-      .then((response) => {
-        setUser(response.user);
-        return response.user;
-      });
+    signInWithPopup(auth, new GithubAuthProvider)
+      .then(result => {
+        const credential = GithubAuthProvider.credentialFromResult(result)
+        const token = credential.accessToken
+        setUser(result.user)
+      })
   };
 
   const signOut = () => {
@@ -35,16 +40,16 @@ function useProvideAuth() {
       });
   };
 
-  useEffect(() => {
-    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-      if (user) {
-        setUser(user);
-      } else {
-        setUser(false);
-      }
-    });
-    return () => unsubscribe();
-  }, []);
+  // useEffect(() => {
+  //   const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+  //     if (user) {
+  //       setUser(user);
+  //     } else {
+  //       setUser(false);
+  //     }
+  //   });
+  //   return () => unsubscribe();
+  // }, []);
 
   return {
     user,
