@@ -1,6 +1,7 @@
 import { GithubAuthProvider, getAuth, signInWithPopup, signOut } from 'firebase/auth';
 import { useState, useEffect, useContext, createContext } from 'react';
 import { firebase } from './firebase';
+import { createUser } from './firestore';
 
 const authContext = createContext();
 
@@ -21,8 +22,8 @@ function useProvideAuth() {
   const handleUser = (rawUser) => {
     if (rawUser) {
       const user = formatUser(rawUser)
+      createUser(user.uid, user)
       setUser(user)
-      console.info('hu', user)
       return user
     } else {
       setUser(false)
