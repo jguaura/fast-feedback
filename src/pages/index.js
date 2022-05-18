@@ -5,7 +5,6 @@ import styles from '../styles/Home.module.css';
 
 export default function Home() {
   const auth = useAuth();
-  console.info(auth, 'hook');
 
   return (
     <div className={styles.container}>

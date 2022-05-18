@@ -4,7 +4,7 @@ import { firebase } from './firebase';
 
 const authContext = createContext();
 
-export function ProvideAuth({ children }) {
+export function AuthProvider({ children }) {
   const auth = useProvideAuth();
   return <authContext.Provider value={auth}>{children}</authContext.Provider>;
 }
@@ -16,16 +16,26 @@ export const useAuth = () => {
 function useProvideAuth() {
   const [user, setUser] = useState(null);
 
-  console.log('user - useProvideAuth', user)
-
   const auth = getAuth()
+
+  const handleUser = (rawUser) => {
+    if (rawUser) {
+      const user = formatUser(rawUser)
+      setUser(user)
+      console.info('hu', user)
+      return user
+    } else {
+      setUser(false)
+      return false
+    }
+  }
 
   const signInWithGithub = () => {
     signInWithPopup(auth, new GithubAuthProvider)
       .then(result => {
         const credential = GithubAuthProvider.credentialFromResult(result)
         const token = credential.accessToken
-        setUser(result.user)
+        handleUser(result.user)
       })
   };
 
@@ -35,20 +45,19 @@ function useProvideAuth() {
       .catch(err => console.info(err))
   };
 
-  // useEffect(() => {
-  //   const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
-  //     if (user) {
-  //       setUser(user);
-  //     } else {
-  //       setUser(false);
-  //     }
-  //   });
-  //   return () => unsubscribe();
-  // }, []);
-
+  
   return {
     user,
     signInWithGithub,
     logOut
   };
+}
+
+const formatUser = (user) => {
+  return {
+    uid: user.uid,
+    email: user.email,
+    name: user.displayName,
+    provider: user.providerData[0].providerId
+  }
 }

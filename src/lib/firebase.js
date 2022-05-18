@@ -7,6 +7,6 @@ const firebaseConfig = {
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID
 };
 const firebase = initializeApp(firebaseConfig)
-console.log(firebaseConfig)
+
 export  { firebase, getAuth }
 
