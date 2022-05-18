@@ -16,8 +16,11 @@ export default function Home() {
       <main className={styles.main}>
         <h1 className={styles.title}>Fast feedback</h1>
         <p className={styles.description}>
-          Get started by editing{' '}
-          <code className={styles.code}>pages/index.js</code>
+          Current user{' '}
+          <code className={styles.code}>
+            {auth?.user?.displayName}
+            {auth?.user?.email}
+          </code>
         </p>
         <div>
           {!auth.user ? (
@@ -26,8 +29,6 @@ export default function Home() {
             <button onClick={() => auth.logOut()}>log out</button>
           )}
         </div>
-        <div>{auth?.user?.displayName}</div>
-        <div>{auth?.user?.email}</div>
       </main>
 
       <footer className={styles.footer}>
