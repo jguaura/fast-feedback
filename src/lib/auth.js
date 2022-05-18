@@ -1,6 +1,5 @@
 import { GithubAuthProvider, getAuth, signInWithPopup, signOut } from 'firebase/auth';
 import { useState, useEffect, useContext, createContext } from 'react';
-import { firebase } from './firebase';
 import { createUser } from './firestore';
 
 const authContext = createContext();
